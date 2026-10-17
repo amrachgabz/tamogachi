@@ -1,17 +1,15 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-bool happiness_checker(int happiness)
-{
-    if (happiness == 0) { return false; }
-    else { return true; }
-}
+//functions to check for minimum
+bool happiness_checker(int happiness) { return happiness > 0; }
+bool health_checker(int health) { return health > 0; }
 
 int main()
 {
     char name[20];
     bool running = false;
-    int health = 10, happiness = 10;
+    int health = 5, happiness = 5;
     int health_max = 10, happiness_max = 10;
 
     //Intro
@@ -63,25 +61,21 @@ int main()
             else if (food_choice == 3) { gain = 1; cost = 1; }
 
             //increasing health based on food choice
-            if (food_choice == 1) 
-            { 
-                if (gain + health <= health_max && happiness >= 3)
-                {
-                    health += 5; 
-                    happiness -= 3; 
-                }
-                else if (!happiness_checker(happiness))
-                {
-                    printf("Uh oh! Your pet is too sad. See you another time!\n");
-                    running = false;
-                }
-                else
-                {
-                    printf("Uh oh! Seems like your pet is full!\n");
-                }
+            if (gain + health > health_max)
+            {
+                printf("Uh oh! Seems like your pet is full!\n");
             }
-            else if (food_choice == 2) { health += 3; happiness -= 2; }
-            else if (food_choice == 3) { health += 1; happiness -= 1; }
+            else
+            {
+                health += gain; 
+                happiness -= cost; 
+            }
+            
+            if (!happiness_checker(happiness))
+            {
+                printf("Uh oh! Your pet is too sad. See you another time!\n");
+                running = false;
+            }
 
             printf("Health: %d\n", health);
             printf("Happiness: %d\n", happiness);
@@ -94,11 +88,29 @@ int main()
             printf("1. Trampoline \n2. Ball \n 3. Chew Toy \n");
             do { scanf("%d", &toy); }
             while (toy < 1 || toy > 3);
+            int gain = 0, cost = 0;
+
+            //Gain and Cost measures
+            if (toy == 1) { gain = 5; cost = 3; }
+            else if (toy == 2) { gain = 3; cost = 2; }
+            else if (toy == 3) { gain = 1; cost = 1; }
+
+            //Increasing happiness based on toy
+            if (gain + happiness > happiness_max)
+            {
+                printf("You're Pet is very happy!\n");
+            }
+            else
+            {
+                happiness += gain;
+                health -= cost;
+            }
             
-            //decreasing health based on food choice
-            if (toy == 1) { happiness += 5; health -= 3; }
-            else if (toy == 2) { happiness += 3; health -= 2;}
-            else if (toy == 3) { happiness += 1; health -= 1;}
+            if (!health_checker(health))
+            {
+                printf("Uh oh! Your pet is sick! See you another time;");
+                running = false;
+            }
 
             printf("Health: %d\n", health);
             printf("Happiness: %d\n", happiness);
