@@ -1,11 +1,18 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+bool happiness_checker(int happiness)
+{
+    if (happiness == 0) { return false; }
+    else { return true; }
+}
+
 int main()
 {
     char name[20];
     bool running = false;
     int health = 10, happiness = 10;
+    int health_max = 10, happiness_max = 10;
 
     //Intro
     printf("Welcome to Pixel Pet!\n");
@@ -48,9 +55,31 @@ int main()
             printf("1. Pizza (+5)\n2. Cupcake (+3)\n3. Coffee (+1)\n");
             do { scanf("%d", &food_choice); }
             while (food_choice < 1 || food_choice > 3);
+            
+            //gain and cost measures
+            int gain = 0, cost = 0;
+            if (food_choice == 1) { gain = 5; cost = 3; }
+            else if (food_choice == 2) { gain = 3; cost = 2; }
+            else if (food_choice == 3) { gain = 1; cost = 1; }
 
             //increasing health based on food choice
-            if (food_choice == 1) { health += 5; happiness -= 3; }
+            if (food_choice == 1) 
+            { 
+                if (gain + health <= health_max && happiness >= 3)
+                {
+                    health += 5; 
+                    happiness -= 3; 
+                }
+                else if (!happiness_checker(happiness))
+                {
+                    printf("Uh oh! Your pet is too sad. See you another time!\n");
+                    running = false;
+                }
+                else
+                {
+                    printf("Uh oh! Seems like your pet is full!\n");
+                }
+            }
             else if (food_choice == 2) { health += 3; happiness -= 2; }
             else if (food_choice == 3) { health += 1; happiness -= 1; }
 
@@ -76,6 +105,7 @@ int main()
         }
         else if (choice == 3)
         {
+            printf("Thank you for playing! %s says bye!", name);
             running = false;
         }
     }
